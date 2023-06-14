@@ -1,4 +1,5 @@
 import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -15,33 +16,40 @@ public class Main {
                 monthlyManager.loadFile("01", "m.202101.csv");
                 monthlyManager.loadFile("02", "m.202102.csv");
                 monthlyManager.loadFile("03", "m.202103.csv");
+                if (!monthlyManager.checkAvailabilityOfData()) {
+                    continue;
+                }
                 System.out.println("Данные успешно считаны.");
             } else if (command == 2) {
                 yearlyManager = new YearlyManager("y.2021.csv");
+                if (!yearlyManager.checkAvailabilityOfData()) {
+                    continue;
+                }
                 System.out.println("Данные успешно считаны.");
             } else if (command == 3) {
-                if (yearlyManager != null && monthlyManager != null) {
+                if (monthlyManager == null || !monthlyManager.checkAvailabilityOfData() ||
+                        yearlyManager == null || !yearlyManager.checkAvailabilityOfData()) {
+                    System.out.println("Нет или недостаточно данных для сверки отчётов. Убедитесь, что считаны все необходимые файлы.");
+                } else {
                     Checker checker = new Checker(monthlyManager, yearlyManager);
                     checker.check();
-                } else {
-                    System.out.println("Данные для сверки отсутствуют. Для продолжения работы сначала считайте месячные и годовой отчёты.");
                 }
             } else if (command == 4) {
-                if (monthlyManager != null) {
-                    monthlyManager.getMostProfitableProduct();
-                    monthlyManager.getBiggestSpend();
-                } else {
-                    System.out.println("Данные для сверки отсутствуют. Для продолжения работы сначала считайте месячные отчёты.");
+                if (monthlyManager == null || !monthlyManager.checkAvailabilityOfData()) {
+                    System.out.println("Нет данных для отчёта. Возможно, файлы отсутствуют в нужной директории или повреждены.");
+                    continue;
                 }
+                monthlyManager.printMostProfitableProduct();
+                monthlyManager.printBiggestSpend();
             } else if (command == 5) {
-                if (yearlyManager != null) {
-                    System.out.println("Рассматриваемый год - 2021.");
-                    yearlyManager.getProfitStatement();
-                    yearlyManager.getAverageExpenses();
-                    yearlyManager.getAverageIncome();
-                } else {
-                    System.out.println("Данные для сверки отсутствуют. Для продолжения работы сначала считайте годовой отчёт.");
+                if (yearlyManager == null || !yearlyManager.checkAvailabilityOfData()) {
+                    System.out.println("Нет данных для отчёта. Возможно, файлы отсутствуют в нужной директории или повреждены.");
+                    continue;
                 }
+                System.out.println("Рассматриваемый год - 2021.");
+                yearlyManager.printProfitStatement();
+                yearlyManager.printAverageExpenses();
+                yearlyManager.printAverageIncome();
             } else if (command == 0) {
                 System.out.println("Введите команду для завершения работы:");
                 String commandEnd = scanner.next();
@@ -67,4 +75,3 @@ public class Main {
         System.out.println("0 - Завершить работу");
     }
 }
-

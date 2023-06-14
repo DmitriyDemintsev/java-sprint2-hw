@@ -13,4 +13,8 @@ public class MonthlyReport {
         this.unit_price = unit_price;
         this.month = month;
     }
+
+    public int countingExpensesAndProfits() {
+        return unit_price * quantity;
+    }
 }

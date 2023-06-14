@@ -19,10 +19,16 @@ public class MonthlyManager {
             MonthlyReport monthlyReport = new MonthlyReport(item_name, is_expense, quantity, unit_price, month);
             statistics.add(monthlyReport);
         }
-        statisticsForMonth.put(month, statistics);
+        if (!statistics.isEmpty()) {
+            statisticsForMonth.put(month, statistics);
+        }
     }
 
-    public void getMostProfitableProduct() { //считаем прибыльный товар
+    public boolean checkAvailabilityOfData () {
+        return !statisticsForMonth.isEmpty();
+    }
+
+    public void printMostProfitableProduct() { //считаем прибыльный товар
         for (String month : statisticsForMonth.keySet()) {
             ArrayList<MonthlyReport> statistics = statisticsForMonth.get(month);
             int sum = 0;
@@ -30,7 +36,7 @@ public class MonthlyManager {
             String item_name = "";
             for (MonthlyReport report : statistics) {
                 if (!report.is_expense) {
-                    sum = report.unit_price * report.quantity;
+                    sum = report.countingExpensesAndProfits();
                     if (sum > maxProfit) {
                         maxProfit = sum;
                         item_name = report.item_name;
@@ -38,11 +44,11 @@ public class MonthlyManager {
                 }
             }
             System.out.println("Данные за " + month);
-            System.out.println("Самый прибыльный товар - " + item_name + ". Он принес " + sum + "руб.");
+            System.out.println("Самый прибыльный товар - " + item_name + ". Он принес " + sum + " руб.");
         }
     }
 
-    public void getBiggestSpend() { // считаем макс трату
+    public void printBiggestSpend() { // считаем макс трату
         for (String month : statisticsForMonth.keySet()) {
             ArrayList<MonthlyReport> statistics = statisticsForMonth.get(month);
             int sum = 0;
@@ -50,14 +56,15 @@ public class MonthlyManager {
             String item_name = "";
             for (MonthlyReport report : statistics) {
                 if (report.is_expense) {
-                    sum = report.unit_price * report.quantity;
+                    sum = report.countingExpensesAndProfits();
                     if (sum > maxExpense) {
                         maxExpense = sum;
                         item_name = report.item_name;
                     }
                 }
             }
-            System.out.println("Самая большая трата - " + item_name + " на " + sum + "руб.");
+            System.out.println("Данные за " + month);
+            System.out.println("Самая большая трата - " + item_name + " на " + sum + " руб.");
 
         }
     }

@@ -18,11 +18,13 @@ public class YearlyManager {
             YearlyReport yearlyReport = new YearlyReport(month, amount, is_expense);
             statisticsForYear.add(yearlyReport);
         }
-        // System.out.println("");
     }
 
+    public boolean checkAvailabilityOfData () {
+        return !statisticsForYear.isEmpty();
+    }
 
-    public void getAverageIncome() { // считаем средний доход
+    public void printAverageIncome() { // считаем средний доход
         int sum = 0;
         int count = 0;
         for (YearlyReport report : statisticsForYear) {
@@ -34,7 +36,7 @@ public class YearlyManager {
         System.out.println("Средний доход по всем операциям составил: " + sum / count + " руб.");
     }
 
-    public void getAverageExpenses() { // считаем средний расход
+    public void printAverageExpenses() { // считаем средний расход
         int sum = 0;
         int count = 0;
         for (YearlyReport report : statisticsForYear) {
@@ -46,7 +48,7 @@ public class YearlyManager {
         System.out.println("Средний расход по всем операциям составил: " + sum / count + " руб.");
     }
 
-    public void getProfitStatement() { // считаем прибыль
+    public void printProfitStatement() { // считаем прибыль
         HashMap<String, Integer> profitStatement = new HashMap<>();
         for (YearlyReport report : statisticsForYear) {
             int content = profitStatement.getOrDefault(report.month, 0);
@@ -61,5 +63,4 @@ public class YearlyManager {
             System.out.println("Прибыль за месяц " + month + " составила " + profitStatement.get(month) + " руб.");
         }
     }
-
 }
